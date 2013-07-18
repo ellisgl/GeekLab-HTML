@@ -22,17 +22,35 @@ class HTML extends \XMLWriter
                     'transitional' => array(
                         'public' => '-//W3C//DTD HTML 1.0 Transitional//EN', 'system' => 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'
                     ), 'strict'    => array(
-                        'public' => '-//W3C//DTD HTML 1.0 Strict//EN', 'system' => 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'
+                        'public' => '--//W3C//DTD HTML 4.01//EN', 'system' => 'http://www.w3.org/TR/html4/strict.dtd'
                     ), 'frameset'  => array(
-                        'public' => '-//W3C//DTD HTML 1.0 Frameset//EN', 'system' => 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd'
+                        'public' => '-//W3C//DTD HTML 4.01 Frameset//EN', 'system' => 'http://www.w3.org/TR/html4/frameset.dtd'
                     )
                 ), '1.1' => array(
                     'default' => array(
-                        'public' => '-//W3C//DTD HTML 1.1//EN', 'system' => 'http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd'
+                        'public' => '-//W3C//DTD XHTML 1.1//EN', 'system' => 'http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd'
                     )
                 )
             ),
             'xmlns' => 'http://www.w3.org/1999/xhtml'
+        ),
+        'html' => array(
+            'versions' => array(
+                '4.01' => array(
+                    'transitional' => array(
+                        'public' => '-//W3C//DTD HTML 4.01 Transitional//EN', 'system' => 'http://www.w3.org/TR/html4/loose.dtd'
+                    ), 'strict'    => array(
+                        'public' => '-//W3C//DTD HTML 1.0 Strict//EN', 'system' => 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'
+                    ), 'frameset'  => array(
+                        'public' => '-//W3C//DTD HTML 1.0 Frameset//EN', 'system' => 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd'
+                    )
+                ),
+                '5' => array(
+                    'default' => array(
+                        'docType' => 'html'
+                    )
+                )
+            )
         )
     );
 
@@ -50,11 +68,13 @@ class HTML extends \XMLWriter
      */
     public function __construct(array $options = array())
     {
-        $defaults = array('indent' => FALSE,
+        $defaults = array('indent'       => FALSE,
                           'indentString' => '  ',
-                          'docType' => 'xhtml',
-                          'version' => '1.0',
-                          'level'   => 'transitional');
+                          'docType'      => 'xhtml',
+                          'version'      => '1.0',
+                          'level'        => 'transitional',
+                          'lang'         => 'en',
+                          'encoding'     => 'UTF-8');
 
         $this->options = array_merge($defaults, $options);
 
@@ -114,7 +134,7 @@ class HTML extends \XMLWriter
     /**
      * Get the PUBLIC attribute
      *
-     * @return string
+     * @return string|NULL
      */
     public function getPublic()
     {
@@ -124,14 +144,23 @@ class HTML extends \XMLWriter
         {
             $ret = $this->headers[$this->options['docType']]['versions'][$this->options['version']][$this->options['level']]['public'];
         }
-        else if($this->headers[$this->options['docType']]['versions'][$this->options['version']]['default']['public'])
+        else if(isset($this->headers[$this->options['docType']]['versions'][$this->options['version']]['default']['public']))
         {
             $ret = $this->headers[$this->options['docType']]['versions'][$this->options['version']]['default']['public'];
+        }
+        else
+        {
+            $ret = NULL;
         }
 
         return $ret;
     }
 
+    /**
+     * Get the SYSTEM attribute
+     *
+     * @return string|null
+     */
     public function getSystem()
     {
         $ret = "";
@@ -143,6 +172,10 @@ class HTML extends \XMLWriter
         else if(isset($this->headers[$this->options['docType']]['versions'][$this->options['version']]['default']['system']))
         {
             $ret = $this->headers[$this->options['docType']]['versions'][$this->options['version']]['default']['system'];
+        }
+        else
+        {
+            $ret = NULL;
         }
 
         return $ret;
@@ -214,43 +247,79 @@ class HTML extends \XMLWriter
     /**
      * Output HTML
      *
-     * @param bool $XHTMLWrap
+     *@param bool $HTMLWrap
      *
-     * @return string
+     *@return string
      */
-    public function output($XHTMLWrap = FALSE)
+    public function output($HTMLWrap = FALSE)
     {
         $this->closeAll();
 
-        $ret = $this->outputMemory();
+        $ret = trim($this->outputMemory());
 
-        if($XHTMLWrap)
+        if($this->options['indent'])
         {
-            $XHTML = new \XMLWriter();
-            $XHTML->openMemory();
+            $ret = $this->rawIndent($ret);
+        }
+
+        if($HTMLWrap)
+        {
+            $HTML = new \XMLWriter();
+            $HTML->openMemory();
 
             // Use indention on output? (Not very DRY, I know.)
             if($this->options['indent'])
             {
-                $XHTML->setIndentString($this->options['indentString']);
-                $XHTML->setIndent(TRUE);
+                $HTML->setIndentString($this->options['indentString']);
+                $HTML->setIndent(TRUE);
             }
 
-            if($this->options['docType'] === 'xhtml')
+            $public = "";
+            $system = "";
+
+            switch($this->options['docType'])
             {
-                $public = "";
-                $system = "";
+                case 'html':
+                    $HTML->startDtd('html', $this->getPublic(), $this->getSystem());
+                    $HTML->endDtd();
+                    $HTML->startElement('html');
+                    $HTML->writeAttribute('lang', $this->options['lang']);
+                    $HTML->writeRaw("\n" . $ret);
+                    $HTML->endDocument();
 
-                $XHTML->startDtd('html', $this->getPublic(), $this->getSystem());
-                $XHTML->endDtd();
-                $XHTML->startElement('html');
-                $XHTML->writeAttribute('xmlns', $this->getXMLNS());
-                $XHTML->endElement();
-                $XHTML->writeRaw(trim($ret));
-                $XHTML->endDocument();
+                    $ret = $HTML->outputMemory();
+                break;
 
-                $ret = $XHTML->outputMemory();
+                case 'xhtml':
+                default:
+                    // Get the inner html
+                    $HTML->startDocument( '1.0' , $this->options['encoding']);
+                    $HTML->startDtd('html', $this->getPublic(), $this->getSystem());
+                    $HTML->endDtd();
+                    $HTML->startElement('html');
+                    $HTML->writeAttribute('xmlns', $this->getXMLNS());
+                    $HTML->writeAttribute('xml:lang', $this->options['lang']);
+                    $HTML->writeAttribute('lang', $this->options['lang']);
+                    $HTML->writeRaw("\n" . $ret);
+                    $HTML->endDocument();
+
+                    $ret = $HTML->outputMemory();
+                break;
             }
+
+        }
+
+        return trim($ret);
+    }
+
+    public function rawIndent($text)
+    {
+        $ret   = "";
+        $lines = preg_split("/((\r?\n)|(\r\n?))/", $text);
+
+        foreach($lines as $line)
+        {
+            $ret = $ret . $this->options['indentString'] . $line."\n";
         }
 
         return $ret;
