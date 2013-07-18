@@ -13,6 +13,18 @@ Programmatically create HTML (XHTML, 4.x, 5) for PHP 5.3+
 
 ### Installation
 Copy the lib\GeekLab folder to your codebase where it can be loaded.
+-OR-
+Via Composer
+composer.json
+```json
+{
+    "require":
+    {
+        "geeklab/html": "*"
+    }
+    "minimum-stability" : "dev"
+}
+```
 
 ### Usage (From example\index.php)
 ```
