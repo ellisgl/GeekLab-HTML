@@ -312,14 +312,28 @@ class HTML extends \XMLWriter
         return trim($ret);
     }
 
-    public function rawIndent($text)
+    /**
+     * Indent code forcing
+     *
+     * @param     $text
+     * @param int $level
+     *
+     * @return string
+     */
+    public function rawIndent($text, $level = 1)
     {
-        $ret   = "";
-        $lines = preg_split("/((\r?\n)|(\r\n?))/", $text);
+        $indent = "";
+        $ret    = "";
+        $lines  = preg_split("/((\r?\n)|(\r\n?))/", $text);
+
+        for($i = 0; $i < $level; ++$i)
+        {
+            $indent .= $this->options['indentString'];
+        }
 
         foreach($lines as $line)
         {
-            $ret = $ret . $this->options['indentString'] . $line."\n";
+            $ret = $ret . $indent . $line."\n";
         }
 
         return $ret;
