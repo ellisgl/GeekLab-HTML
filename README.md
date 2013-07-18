@@ -54,7 +54,7 @@ composer.json
 //$HTML = new GeekLab\HTML(array('indent' => TRUE, 'version' => '1.1')) ;
 
 /**
- * HTML 4.01, Language "en" no indention
+ * HTML 4.01, Language "en" with indention
  **/
 //$HTML = new GeekLab\HTML(array('indent' => TRUE, 'docType' => 'html', 'version' => '4.01'));
 
