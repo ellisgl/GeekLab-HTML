@@ -27,7 +27,7 @@ composer.json
 ```
 
 ### Usage (From example\index.php)
-```
+```php
 /**
  * XHTML 1.0 Transitional, Language "en" and encoding of "UTF-8" no indention
  */
