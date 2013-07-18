@@ -248,12 +248,16 @@ class HTML extends \XMLWriter
      * Output HTML
      *
      *@param bool $HTMLWrap
+     *@param bool $closeAll
      *
      *@return string
      */
-    public function output($HTMLWrap = FALSE)
+    public function output($HTMLWrap = FALSE, $closeAll = TRUE)
     {
-        $this->closeAll();
+        if($closeAll)
+        {
+            $this->closeAll();
+        }
 
         $ret = trim($this->outputMemory());
 
