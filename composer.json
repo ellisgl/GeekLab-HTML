@@ -1,20 +1,26 @@
 {
-    "name": "geeklab/html",
+    "name"       : "geeklab/HTML",
     "description": "Programmatically create HTML (XHTML, 4.x, 5) for PHP 5.3+",
-    "keywords": ["HTML","XHTML","HTML5"],
-    "homepage": "http://github.com/ellisgl/GeekLab-HTML",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
+    "keywords"   : [
+        "HTML",
+        "XHTML",
+        "HTML5"
+    ],
+    "license"    : "MIT",
+    "authors"    : [
         {
-            "name": "EllisGL",
-            "homepage": "http://github.com/ellisgl"
+            "name"    : "Ellis GeekLab",
+            "homepage": "http://github.com/ellisgl",
+            "email"   : "name@domain.com"
         }
     ],
-    "require": {
+    "require"    : {
         "php": ">=5.3.0"
     },
-    "autoload": {
-        "psr-0": {"GeekLab": "lib/"}
+    "require-dev": {},
+    "autoload"   : {
+        "psr-4": {
+            "GeekLab\\HTML\\": "src"
+        }
     }
 }

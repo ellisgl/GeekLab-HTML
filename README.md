@@ -12,9 +12,12 @@ Programmatically create HTML (HTML, 4.x, 5) for PHP 5.3+
 *    Creates (X)HTML programmitically
 
 ### Installation
-Copy the lib\GeekLab folder to your codebase where it can be loaded.
+Copy the src\ folder to a folder GeekLab\HTML where your autoloader can load it.
+
 -OR-
+
 Via Composer
+
 composer.json
 ```json
 {
@@ -31,27 +34,27 @@ composer.json
 /**
  * XHTML 1.0 Transitional, Language "en" and encoding of "UTF-8" no indention
  */
-//$HTML = new GeekLab\HTML();
+//$HTML = new GeekLab\HTML\HTML();
 
 /**
  * XHTML 1.0 Transitional, Language "en" and encoding of "UTF-8" with indention
  */
-//$HTML = new GeekLab\HTML(array('indent' => TRUE));
+//$HTML = new GeekLab\HTML\HTML(array('indent' => TRUE));
 
 /**
  * XHTML 1.0 Strict, Language "en" and encoding of "UTF-8" with indention
  */
-//$HTML = new GeekLab\HTML(array('indent' => TRUE, 'level' => 'strict')) ;
+//$HTML = new GeekLab\HTML\HTML(array('indent' => TRUE, 'level' => 'strict')) ;
 
 /**
  * XHTML 1.0 Strict, Language "fr" and encoding of "ISO-8859-1" with indention
  */
-//$HTML = new GeekLab\HTML(array('indent' => TRUE, 'level' => 'strict', 'lang' => 'fr', 'encoding' => 'ISO-8859-1')) ;
+//$HTML = new GeekLab\HTML\HTML(array('indent' => TRUE, 'level' => 'strict', 'lang' => 'fr', 'encoding' => 'ISO-8859-1')) ;
 
 /**
  * XHTML 1.1, Language "en" and encoding of "UTF-8" with indention
  */
-//$HTML = new GeekLab\HTML(array('indent' => TRUE, 'version' => '1.1')) ;
+//$HTML = new GeekLab\HTML\HTML(array('indent' => TRUE, 'version' => '1.1')) ;
 
 /**
  * HTML 4.01, Language "en" with indention
@@ -61,7 +64,7 @@ composer.json
 /**
  * HTML5, Language "en" with indention
  */
-$HTML = new GeekLab\HTML(array('indent' => TRUE, 'docType' => 'html', 'version' => '5'));
+$HTML = new GeekLab\HTML\HTML(array('indent' => TRUE, 'docType' => 'html', 'version' => '5'));
 
 $HTML->open('head') // Create the head tag
      ->open('title', 'HTML Test') // Create the title tag with text

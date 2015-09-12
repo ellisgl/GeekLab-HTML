@@ -8,10 +8,15 @@ define('DEV', TRUE);
 define('DOCROOT', realpath(__DIR__) . DIRECTORY_SEPARATOR);
 
 // Auto loader
+/**
 require_once DOCROOT . 'AutoLoader.php';
 
 AutoLoader::getInstance()->registerPaths(DOCROOT . '..'.DIRECTORY_SEPARATOR.'lib' . DIRECTORY_SEPARATOR)
                          ->load();
+**/
+
+// Use Composers Autoload
+require_once('../../vendor/autoload.php');
 
 /**
  * XHTML 1.0 Transitional, Language "en" and encoding of "UTF-8" no indention
@@ -46,7 +51,7 @@ AutoLoader::getInstance()->registerPaths(DOCROOT . '..'.DIRECTORY_SEPARATOR.'lib
 /**
  * HTML5, Language "en" with indention
  */
-$HTML = new GeekLab\HTML(array('indent' => TRUE, 'docType' => 'html', 'version' => '5'));
+$HTML = new \GeekLab\HTML\HTML(array('indent' => TRUE, 'docType' => 'html', 'version' => '5'));
 
 $HTML->open('head')
      ->open('title', 'HTML Test')
