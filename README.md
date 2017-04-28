@@ -25,7 +25,7 @@ composer.json
     {
         "geeklab/html": "*"
     }
-    "minimum-stability" : "dev"
+    "minimum-stability": "dev"
 }
 ```
 
